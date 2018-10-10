@@ -156,6 +156,7 @@
 
                     <!--PM2.5图片-->
                     <ImageView
+                        android:id="@+id/pm2_5_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5.0dip"
@@ -213,7 +214,7 @@
                     android:singleLine="true"
                     android:text="-2℃~7℃"
                     android:textColor="@android:color/white"
-                    android:textSize="30.0sp"/>
+                    android:textSize="20.0sp"/>
                 <!--天气状况-->
                 <TextView
                     android:id="@+id/climate"
