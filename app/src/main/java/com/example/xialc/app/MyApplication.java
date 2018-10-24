@@ -23,12 +23,12 @@ public class MyApplication extends Application{
     private List<City> mCityList;
 
     public void onCreate(){
-        super.onCreate();
-        Log.d(TAG,"MyApplication->Oncreate");
-
-        myApplication = this;
-        mCityDB = openCityDB();
-        initCityList();
+          super.onCreate();
+//        Log.d(TAG,"MyApplication->Oncreate");
+//
+//        myApplication = this;
+//        mCityDB = openCityDB();
+//        initCityList();
     }
 
     private void initCityList(){
@@ -49,9 +49,9 @@ public class MyApplication extends Application{
             i++;
             String cityName = city.getCity();
             String cityCode = city.getNumber();
-            Log.d(TAG,cityCode+":"+cityName);
+            //Log.d(TAG,cityCode+":"+cityName);
         }
-        Log.d(TAG,"i="+i);
+       // Log.d(TAG,"i="+i);
         return true;
     }
 

@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             Toast.makeText(MainActivity.this,"网络挂了！",Toast.LENGTH_LONG).show();
         }
 
-        mCitySelect = (ImageView) findViewById(R.id.title_city_manager);
+        mCitySelect = findViewById(R.id.title_city_manager);
         mCitySelect.setOnClickListener(this);
 
         initView();
