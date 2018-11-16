@@ -37,8 +37,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
     private List<City> mCityList;
     private CityDB mCityDB;
 
-    //ArrayList<Map<String, Object>> mData = new ArrayList<Map<String, Object>>();
-    //ArrayList<Map<String, Object>> mDataSub = new ArrayList<Map<String, Object>>();
     ArrayList<String> mCityName = new ArrayList<String>();
     ArrayList<String> mCityCode = new ArrayList<String>();
     ArrayList<String> mCityNameSub = new ArrayList<String>();

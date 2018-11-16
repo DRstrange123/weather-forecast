@@ -57,7 +57,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_info);
 
-        mUpdateBtn = (ImageView) findViewById(R.id.title_update_btn);
+        mUpdateBtn = findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener(this);
 
         if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE){
@@ -301,21 +301,24 @@ public class MainActivity extends Activity implements View.OnClickListener{
         if (todayWeather.getType().equals("中雪")){weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongxue);}
         if (todayWeather.getType().equals("中雨")){weatherImg.setImageResource(R.drawable.biz_plugin_weather_zhongyu);}
 
-        pm25value = Integer.parseInt(todayWeather.getPm25());
-        if ( pm25value >= 0 && pm25value <= 50){
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
-        }else if ( pm25value <= 100){
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
-        }else if ( pm25value <= 150){
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
-        }else if ( pm25value <= 200){
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_151_200);
-        }else if ( pm25value <= 300){
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
+        if(todayWeather.getPm25()!=null) {
+            pm25value = Integer.parseInt(todayWeather.getPm25());
+            if (pm25value >= 0 && pm25value <= 50) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
+            } else if (pm25value <= 100) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
+            } else if (pm25value <= 150) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
+            } else if (pm25value <= 200) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_151_200);
+            } else if (pm25value <= 300) {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
+            } else {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_greater_300);
+            }
         }else {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_greater_300);
+            pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
         }
-
         Toast.makeText(MainActivity.this,"更新成功！",Toast.LENGTH_SHORT).show();
     }
 }
