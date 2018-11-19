@@ -141,7 +141,6 @@ public class SelectCity extends Activity implements View.OnClickListener{
             case R.id.title_back:
                 Intent i = new Intent();
                 i.putExtra("cityCode",selectCityCode);
-                //i.putExtra("cityCode","101160101");
                 setResult(RESULT_OK,i);
                 finish();
                 break;

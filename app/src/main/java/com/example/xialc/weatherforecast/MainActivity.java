@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -12,7 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.example.xialc.app.MyApplication;
+import com.example.xialc.bean.City;
 import com.example.xialc.bean.TodayWeather;
+import com.example.xialc.db.CityDB;
 import com.example.xialc.util.NetUtil;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -20,12 +28,16 @@ import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends Activity implements View.OnClickListener{
     private static final int UPDATE_TODAY_WEATHER = 1;
@@ -39,6 +51,12 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
             temperatureTv, climateTv, windTv, city_name_Tv;
     private ImageView weatherImg, pmImg, locImg;
+
+    private LocationClient mLocationClient;
+
+    private CityDB mCityDB;
+
+    private List<City> mCityList;
 
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -126,9 +144,73 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
 
         if (view.getId() == R.id.title_location){
-            Intent intent = new Intent(MainActivity.this,testDB.class);
-            MainActivity.this.startActivity(intent);
+//            Intent intent = new Intent(MainActivity.this,testDB.class);
+//            MainActivity.this.startActivity(intent);
+            mLocationClient = new LocationClient(getApplicationContext());
+            mLocationClient.registerLocationListener(new BDLocationListener() {
+                @Override
+                public void onReceiveLocation(BDLocation bdLocation) {
+                    String city = bdLocation.getCity();
+                    String cityname = city.replace("市","");
+                    Log.d("loccity",cityname);
+
+                    mCityDB = openCityDB();
+                    mCityList = mCityDB.getAllCity();
+
+                    for (City mcity : mCityList) {
+                        if (mcity.getCity().equals(cityname)){
+                            String cityCode = mcity.getNumber();
+                            Log.d("loccity",cityCode);
+                            queryWeatherCode(cityCode);
+                            break;
+                        }
+                    }
+                }
+            });
+            LocationClientOption option = new LocationClientOption();
+            option.setIsNeedAddress(true);
+            option.setAddrType("all");
+            mLocationClient.setLocOption(option);
+            mLocationClient.start();
         }
+    }
+
+    private CityDB openCityDB() {
+        String path = "/data"
+                + Environment.getDataDirectory().getAbsolutePath()
+                + File.separator + getPackageName()
+                + File.separator + "databases1"
+                + File.separator
+                + CityDB.CITY_DB_NAME;
+        File db = new File(path);
+        if (!db.exists()) {
+
+            String pathfolder = "/data"
+                    + Environment.getDataDirectory().getAbsolutePath()
+                    + File.separator + getPackageName()
+                    + File.separator + "databases1"
+                    + File.separator;
+            File dirFirstFolder = new File(pathfolder);
+            if(!dirFirstFolder.exists()){
+                dirFirstFolder.mkdirs();
+            }
+            try {
+                InputStream is = getAssets().open("city.db");
+                FileOutputStream fos = new FileOutputStream(db);
+                int len = -1;
+                byte[] buffer = new byte[1024];
+                while ((len = is.read(buffer)) != -1) {
+                    fos.write(buffer, 0, len);
+                    fos.flush();
+                }
+                fos.close();
+                is.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(0);
+            }
+        }
+        return new CityDB(this, path);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
