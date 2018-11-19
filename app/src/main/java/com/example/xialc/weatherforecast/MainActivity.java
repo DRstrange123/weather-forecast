@@ -10,6 +10,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
             temperatureTv, climateTv, windTv, city_name_Tv;
     private ImageView weatherImg, pmImg, locImg;
 
+    private ProgressBar progressBar;
+
     private LocationClient mLocationClient;
 
     private CityDB mCityDB;
@@ -75,6 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_info);
 
+        progressBar = findViewById(R.id.title_update_progress);
         mUpdateBtn = findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener(this);
         locImg = findViewById(R.id.title_location);
@@ -129,6 +133,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         if (view.getId() == R.id.title_update_btn){
 
+            progressBar.setVisibility(View.VISIBLE);
+            mUpdateBtn.setVisibility(View.INVISIBLE);
+
             SharedPreferences sharedPreferences = getSharedPreferences("config",MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code","101010100");
             Log.d("myWeather",cityCode);
@@ -144,8 +151,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
         }
 
         if (view.getId() == R.id.title_location){
-//            Intent intent = new Intent(MainActivity.this,testDB.class);
-//            MainActivity.this.startActivity(intent);
+           // Intent intent = new Intent(MainActivity.this,testDB.class);
+           // MainActivity.this.startActivity(intent);
+            progressBar.setVisibility(View.VISIBLE);
+            mUpdateBtn.setVisibility(View.INVISIBLE);
+            
             mLocationClient = new LocationClient(getApplicationContext());
             mLocationClient.registerLocationListener(new BDLocationListener() {
                 @Override
@@ -173,6 +183,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             mLocationClient.setLocOption(option);
             mLocationClient.start();
         }
+
     }
 
     private CityDB openCityDB() {
@@ -409,5 +420,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
             pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
         }
         Toast.makeText(MainActivity.this,"更新成功！",Toast.LENGTH_SHORT).show();
+        progressBar.setVisibility(View.INVISIBLE);
+        mUpdateBtn.setVisibility(View.VISIBLE);
     }
 }
