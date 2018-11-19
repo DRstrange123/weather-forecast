@@ -38,7 +38,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     private TextView cityTv, timeTv, humidityTv, weekTv, pmDataTv, pmQualityTv,
             temperatureTv, climateTv, windTv, city_name_Tv;
-    private ImageView weatherImg, pmImg;
+    private ImageView weatherImg, pmImg, locImg;
 
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -59,6 +59,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         mUpdateBtn = findViewById(R.id.title_update_btn);
         mUpdateBtn.setOnClickListener(this);
+        locImg = findViewById(R.id.title_location);
+        locImg.setOnClickListener(this);
 
         if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE){
             Log.d("myWeather","网络ok");
@@ -121,6 +123,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 Toast.makeText(MainActivity.this,"网络挂了！",Toast.LENGTH_LONG).show();
             }
 
+        }
+
+        if (view.getId() == R.id.title_location){
+            Intent intent = new Intent(MainActivity.this,testDB.class);
+            MainActivity.this.startActivity(intent);
         }
     }
 
